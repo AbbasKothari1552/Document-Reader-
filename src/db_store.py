@@ -1,5 +1,11 @@
-from langchain_community.vectorstores import FAISS
+import os
+os.environ["STREAMLIT_SERVER_ENABLE_FILE_WATCHER"] = "false"
+from dotenv import load_dotenv
+load_dotenv()
+
 import streamlit as st
+
+from langchain_community.vectorstores import FAISS
 
 import os
 

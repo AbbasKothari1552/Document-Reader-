@@ -20,17 +20,19 @@ def format_docs(docs):
 PDF_FOLDER_PATH = "pdfs"
 
 
+def process(question, force_reprocess=False, force_rebuild=False):
 
-
-def process(question):
-    # split documents in chunks
-    split_docs = load_and_process_pdfs(PDF_FOLDER_PATH)
-
+    # split documents in chunks (or load cached chunks)
+    split_docs = load_and_process_pdfs(PDF_FOLDER_PATH, force_reprocess)
     # load embedding model
-    embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en-v1.5")
+    embeddings = HuggingFaceEmbeddings(
+        model_name="BAAI/bge-small-en-v1.5",
+        model_kwargs={'device': 'cpu'},  # or 'cuda' if you have GPU
+        encode_kwargs={'normalize_embeddings': True}
+    )
 
     # load or create vector database
-    vectorstore = get_vector_store(split_docs, embeddings) # force_rebuild=True to build database. Default (False)
+    vectorstore = get_vector_store(split_docs, embeddings, force_rebuild) # force_rebuild=True to build database. Default (False)
 
 
     yolo_expert_template = """
